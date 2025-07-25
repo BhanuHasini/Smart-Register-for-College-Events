@@ -29,9 +29,9 @@ CREATE TABLE IF NOT EXISTS tickets (
 conn.commit()
 
 # Twilio setup
-twilio_account_sid = 'AC39c16e8f4d921b349a1e7ad153e4e66e'
-twilio_auth_token = '58a7b168b13efdf62ae244b7c27decde'
-twilio_phone_number = '+12706814665'
+twilio_account_sid = 'acc_sid'
+twilio_auth_token = 'auth_token'
+twilio_phone_number = 'twilio_number'
 client = Client(twilio_account_sid, twilio_auth_token)
 
 # Globals
@@ -265,6 +265,10 @@ Seat: {seat}
             return
         if not timeslot:
             messagebox.showerror("Error", "Please select a timeslot")
+            return
+        cursor.execute("SELECT 1 FROM tickets WHERE college_id=? AND status='active'", (college_id,))
+        if cursor.fetchone():
+            messagebox.showerror("Error", "This College ID is already registered.")
             return
 
         self.generate_ticket(phone_number, name, timeslot, seat, college_id)
